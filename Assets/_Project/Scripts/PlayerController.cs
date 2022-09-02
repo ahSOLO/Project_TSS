@@ -15,7 +15,6 @@ public class PlayerController : MonoBehaviour
     private PlayerMove playerMoveState;
 
     // Input
-    public InputActionAsset playerInput;
     [HideInInspector] public InputAction moveAction;
 
     void Start()
@@ -25,8 +24,7 @@ public class PlayerController : MonoBehaviour
         SetupPlayerSM();
 
         // Input
-        playerInput.Enable();
-        moveAction = playerInput.FindAction("Move");
+        moveAction = GameManager.Instance.playerInput.FindAction("Move");
     }
 
     private void SetupPlayerSM()
