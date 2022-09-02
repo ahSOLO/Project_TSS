@@ -19,12 +19,16 @@ public class TurretController : MonoBehaviour
 
     private void Update()
     {
-        Vector2 aimVector = aimAction.ReadValue<Vector2>();
-        if (aimVector != Vector2.zero)
+        Vector2 aimVector;
+        if (GameManager.Instance.inputMode == GameManager.InputMode.Controller)
         {
-            RotateTowardsDest(aimVector);
+            aimVector = aimAction.ReadValue<Vector2>();
+            if (aimVector != Vector2.zero)
+            {
+                RotateTowardsDest(aimVector);
+            }
         }
-        else if (mousePos.enabled == true)
+        else if (GameManager.Instance.inputMode == GameManager.InputMode.KBM)
         {
             aimVector = mousePos.ReadValue<Vector2>() - (new Vector2(Screen.width / 2, Screen.height / 2));
             if (aimVector != Vector2.zero)
