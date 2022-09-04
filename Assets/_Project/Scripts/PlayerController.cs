@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    public static PlayerController instance;
+    
     [RangeAttribute(0, 1)] public float friction = 0.233f;
     public float moveSpeed = 3f;
     public Rigidbody2D rB;
@@ -17,6 +19,11 @@ public class PlayerController : MonoBehaviour
     // Input
     [HideInInspector] public InputAction moveAction;
 
+    private void Awake()
+    {
+        instance = this;
+    }
+
     void Start()
     {
         rB = GetComponentInChildren<Rigidbody2D>();
@@ -24,7 +31,7 @@ public class PlayerController : MonoBehaviour
         SetupPlayerSM();
 
         // Input
-        moveAction = GameManager.Instance.playerInput.FindAction("Move");
+        moveAction = GameManager.instance.playerInput.FindAction("Move");
     }
 
     private void SetupPlayerSM()
@@ -46,4 +53,8 @@ public class PlayerController : MonoBehaviour
         
     }
 
+    public Vector2 GetPlayerVelocity()
+    {
+        return rB.velocity;
+    }
 }

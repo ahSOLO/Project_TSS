@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance;
+    public static GameManager instance;
 
     public InputActionAsset playerInput;
     private InputAction aimAction;
@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
+        instance = this;
     }
 
     // Start is called before the first frame update
@@ -28,9 +28,9 @@ public class GameManager : MonoBehaviour
     {
         playerInput.Enable();
 
-        aimAction = GameManager.Instance.playerInput.FindAction("Aim");
-        moveAction = GameManager.Instance.playerInput.FindAction("Move");
-        mousePos = GameManager.Instance.playerInput.FindAction("MousePos");
+        aimAction = GameManager.instance.playerInput.FindAction("Aim");
+        moveAction = GameManager.instance.playerInput.FindAction("Move");
+        mousePos = GameManager.instance.playerInput.FindAction("MousePos");
 
         aimAction.performed += CheckControlSwitch;
         moveAction.performed += CheckControlSwitch;
