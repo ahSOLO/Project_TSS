@@ -113,6 +113,6 @@ public class TurretController : MonoBehaviour
     public void SetSpeed(float speed) => projSpeed = speed;
 
     public float GetDamage() => projDamage;
-    public float GetDamageBounded() => Mathf.Min(9999f, Mathf.Max(1f, projSpeed));
-    public void SetDamage(float damage) => projSpeed = damage;
+    public float GetDamageBounded() => Mathf.Min(9999f, Mathf.Max(1f, projDamage));
+    public void SetDamage(float damage) => projDamage = damage;
 }

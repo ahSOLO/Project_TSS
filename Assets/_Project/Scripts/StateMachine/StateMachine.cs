@@ -68,8 +68,6 @@ public class StateMachine : MonoBehaviour
 
     private void TransitionTo(IState next)
     {
-        Debug.Log($"[StateMachine] Transitioning from {state} to {nextState}");
-        
         state.OnExit();
         state = next;
         state.OnEnter();

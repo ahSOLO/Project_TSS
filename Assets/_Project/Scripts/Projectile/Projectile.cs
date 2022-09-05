@@ -9,12 +9,14 @@ public class Projectile : MonoBehaviour
     private float speed;
     private float lifetime;
     private List<ProjectileModifierEntry> modifiers;
-    protected Rigidbody2D rB;
+    private Rigidbody2D rB;
+    private SpriteRenderer rend;
 
     // Lifetime
     private void Awake()
     {
         rB = GetComponent<Rigidbody2D>();
+        rend = GetComponentInChildren<SpriteRenderer>();
     }
 
     public void Init(float damage, float speed, float lifetime, List<ProjectileModifierEntry> modifiers)
@@ -31,7 +33,9 @@ public class Projectile : MonoBehaviour
         {
             modifierEntry.modifier.OnProjEnable(this);
         }
-        SetVelocity();
+
+        rend.color = CalcProjectileColor();
+        rB.velocity = CalcVelocity();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -50,10 +54,9 @@ public class Projectile : MonoBehaviour
     }
 
     // Logic
-    private void SetVelocity()
-    {
-        rB.velocity = transform.up * speed;
-    }
+    private Vector2 CalcVelocity() => transform.up * speed;
+
+    private Color CalcProjectileColor() => rend.color * Mathf.Sqrt((damage / 10f));
 
     private void EnemyCollision(Collision2D collision)
     {
