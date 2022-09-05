@@ -1,30 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Playables;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    public float damage = 10f;
-    public float speed = 10f;
-    public float lifetime = 2f;
-    public float cooldown = 0.5f;
-    public List<IProjectileModifier> modifiers;
+    private float damage;
+    private float speed;
+    private float lifetime;
+    private List<ProjectileModifierEntry> modifiers;
     protected Rigidbody2D rB;
 
     // Lifetime
     private void Awake()
     {
         rB = GetComponent<Rigidbody2D>();
-        modifiers = new List<IProjectileModifier>();
+    }
+
+    public void Init(float damage, float speed, float lifetime, List<ProjectileModifierEntry> modifiers)
+    {
+        this.damage = damage;
+        this.speed = speed;
+        this.lifetime = lifetime;
+        this.modifiers = modifiers;
     }
 
     private void OnEnable()
     {
-        foreach (var modifier in modifiers)
+        foreach (var modifierEntry in modifiers)
         {
-            modifier.OnAttach();
+            modifierEntry.modifier.OnProjEnable(this);
         }
-
         SetVelocity();
     }
 
@@ -55,9 +61,9 @@ public class Projectile : MonoBehaviour
         {
             // Get enemy HP and subtract damage.
             // Activate projectile effects on enemy.
-            foreach (var modifier in modifiers)
+            foreach (var modifierEntry in modifiers)
             {
-                modifier.OnHit();
+                modifierEntry.modifier.OnHit(this);
             }
             Destroy(gameObject); // TODO: Object pool
         }

@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class TurretController : MonoBehaviour
 {
+    public static TurretController instance;
+    
     public Transform projectileSpawnPoint;
     public Transform projectileContainer;
     public float turnSpeed = 450f;
@@ -15,6 +17,21 @@ public class TurretController : MonoBehaviour
     private InputAction fireAction;
 
     public GameObject projectilePrefab;
+    private Projectile loadedProjectile;
+
+    public float projCooldown;
+    public float projDamage;
+    public float projSpeed;
+    public float projLifetime;
+
+    List<ProjectileModifierEntry> modifiers;
+
+    private void Awake()
+    {
+        instance = this;
+
+        modifiers = new List<ProjectileModifierEntry>();
+    }
 
     private void Start()
     {
@@ -43,9 +60,22 @@ public class TurretController : MonoBehaviour
             }
         }
 
-        if (fireAction.IsPressed())
+        if (fireAction.IsPressed() && cooldown <= 0f)
         {
             FireProjectile();
+        }
+
+        for (int i = modifiers.Count - 1; i >= 0; i--)
+        {
+            if (modifiers[i].lifetime != -1)
+            {
+                modifiers[i].lifetime -= Time.deltaTime;
+                if (modifiers[i].lifetime <= 0)
+                {
+                    modifiers[i].modifier.OnDetach(this);
+                    modifiers.Remove(modifiers[i]);
+                }
+            }
         }
 
         cooldown -= Time.deltaTime;
@@ -59,13 +89,30 @@ public class TurretController : MonoBehaviour
 
     private void FireProjectile()
     {
-        if (cooldown <= 0f)
-        {
-            var proj = Instantiate(projectilePrefab, projectileContainer, true);
-            proj.transform.position = projectileSpawnPoint.position;
-            proj.transform.rotation = projectileSpawnPoint.rotation;
-            proj.gameObject.SetActive(true);
-            cooldown = proj.GetComponent<Projectile>().cooldown;
-        }
+        var proj = Instantiate(projectilePrefab, projectileContainer, true);
+        proj.GetComponent<Projectile>().Init(projDamage, projSpeed, projLifetime, modifiers);
+        proj.transform.position = projectileSpawnPoint.position;
+        proj.transform.rotation = projectileSpawnPoint.rotation;
+        proj.gameObject.SetActive(true);
+        cooldown = GetCooldownBounded();
     }
+
+    public void AttachProjectileModifier(IProjectileModifier modifier, float duration)
+    {
+        modifiers.Add(new ProjectileModifierEntry(modifier, duration));
+
+        modifier.OnAttach(this);
+    }
+
+    public float GetCooldown() => projCooldown;
+    public float GetCooldownBounded() => Mathf.Max(0.15f, projCooldown);
+    public void SetCooldown(float cd) => projCooldown = cd;
+
+    public float GetSpeed() => projSpeed;
+    public float GetSpeedBounded() => Mathf.Min(25f, Mathf.Max(1f, projSpeed));
+    public void SetSpeed(float speed) => projSpeed = speed;
+
+    public float GetDamage() => projDamage;
+    public float GetDamageBounded() => Mathf.Min(9999f, Mathf.Max(1f, projSpeed));
+    public void SetDamage(float damage) => projSpeed = damage;
 }
