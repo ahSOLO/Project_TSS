@@ -10,4 +10,13 @@ public static class Utility
         yield return null;
         action();
     }
+
+    public static float NormalizeAngle(float angle)
+    {
+        if (angle < -180f)
+            angle += 360f;
+        else if (angle > 180f)
+            angle -= 360f;
+        return angle;
+    }
 }

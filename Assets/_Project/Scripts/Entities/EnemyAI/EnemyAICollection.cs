@@ -7,7 +7,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Enemy AI", menuName = "Enemy AI", order = 51)]
 public class EnemyAICollection : ScriptableObject
 {
-    public enum SelectedEnemyAI { ChaseAI, FireAtPlayerAI };
+    public enum SelectedEnemyAI { ChaseAI, AimAtPlayerAI, FireWhenReadyAI, SweepAimAI };
     public List<SelectedEnemyAI> selectedEnemyAIs;
     public List<IEnemyAI> aIModifiers;
 
@@ -22,8 +22,14 @@ public class EnemyAICollection : ScriptableObject
                 case SelectedEnemyAI.ChaseAI:
                     aIModifiers.Add(new ChaseAI());
                     break;
-                case SelectedEnemyAI.FireAtPlayerAI:
-                    aIModifiers.Add(new FireAtPlayerAI());
+                case SelectedEnemyAI.AimAtPlayerAI:
+                    aIModifiers.Add(new AimAtPlayerAI());
+                    break;
+                case SelectedEnemyAI.FireWhenReadyAI:
+                    aIModifiers.Add(new FireWhenReadyAI());
+                    break;
+                case SelectedEnemyAI.SweepAimAI:
+                    aIModifiers.Add(new SweepAimAI());
                     break;
                 default:
                     break;
