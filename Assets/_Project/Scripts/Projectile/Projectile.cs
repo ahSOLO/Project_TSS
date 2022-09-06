@@ -11,6 +11,7 @@ public class Projectile : MonoBehaviour
     private List<ProjectileModifierEntry> modifiers;
     private Rigidbody2D rB;
     private SpriteRenderer rend;
+    private Faction faction;
 
     // Lifetime
     private void Awake()
@@ -19,19 +20,23 @@ public class Projectile : MonoBehaviour
         rend = GetComponentInChildren<SpriteRenderer>();
     }
 
-    public void Init(float damage, float speed, float lifetime, List<ProjectileModifierEntry> modifiers)
+    public void Init(float damage, float speed, float lifetime, List<ProjectileModifierEntry> modifiers, Faction faction)
     {
         this.damage = damage;
         this.speed = speed;
         this.lifetime = lifetime;
         this.modifiers = modifiers;
+        this.faction = faction;
     }
 
     private void OnEnable()
     {
-        foreach (var modifierEntry in modifiers)
+        if (modifiers != null)
         {
-            modifierEntry.modifier.OnProjEnable(this);
+            foreach (var modifierEntry in modifiers)
+            {
+                modifierEntry.modifier.OnProjEnable(this);
+            }
         }
 
         rend.color = CalcProjectileColor();
@@ -40,11 +45,11 @@ public class Projectile : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        EnemyCollision(collision);
+        EntityCollision(collision);
     }
 
     private void Update()
-    {        
+    {
         lifetime -= Time.deltaTime;
 
         if (lifetime <= 0)
@@ -58,15 +63,19 @@ public class Projectile : MonoBehaviour
 
     private Color CalcProjectileColor() => rend.color * Mathf.Sqrt((damage / 10f));
 
-    private void EnemyCollision(Collision2D collision)
+    private void EntityCollision(Collision2D collision)
     {
-        if (collision.collider.CompareTag("Enemy"))
+        if (faction == Faction.Player && collision.collider.CompareTag("Enemy")
+            || faction == Faction.Enemy && collision.collider.CompareTag("Player"))
         {
             // Get enemy HP and subtract damage.
             // Activate projectile effects on enemy.
-            foreach (var modifierEntry in modifiers)
+            if (modifiers != null)
             {
-                modifierEntry.modifier.OnHit(this);
+                foreach (var modifierEntry in modifiers)
+                {
+                    modifierEntry.modifier.OnHit(this);
+                }
             }
             Destroy(gameObject); // TODO: Object pool
         }

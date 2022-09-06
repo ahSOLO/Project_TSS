@@ -10,14 +10,13 @@ public class TurretController : MonoBehaviour
     public Transform projectileSpawnPoint;
     public Transform projectileContainer;
     public float turnSpeed = 450f;
-    public float cooldown;
+    public float cooldownTimer;
 
     private InputAction aimAction;
     private InputAction mousePos;
     private InputAction fireAction;
 
     public GameObject projectilePrefab;
-    private Projectile loadedProjectile;
 
     public float projCooldown;
     public float projDamage;
@@ -60,7 +59,7 @@ public class TurretController : MonoBehaviour
             }
         }
 
-        if (fireAction.IsPressed() && cooldown <= 0f)
+        if (fireAction.IsPressed() && cooldownTimer <= 0f)
         {
             FireProjectile();
         }
@@ -78,7 +77,7 @@ public class TurretController : MonoBehaviour
             }
         }
 
-        cooldown -= Time.deltaTime;
+        cooldownTimer -= Time.deltaTime;
     }
 
     private void RotateTowardsDest(Vector2 destination)
@@ -90,11 +89,11 @@ public class TurretController : MonoBehaviour
     private void FireProjectile()
     {
         var proj = Instantiate(projectilePrefab, projectileContainer, true);
-        proj.GetComponent<Projectile>().Init(projDamage, projSpeed, projLifetime, modifiers);
+        proj.GetComponent<Projectile>().Init(projDamage, projSpeed, projLifetime, modifiers, Faction.Player);
         proj.transform.position = projectileSpawnPoint.position;
         proj.transform.rotation = projectileSpawnPoint.rotation;
         proj.gameObject.SetActive(true);
-        cooldown = GetCooldownBounded();
+        cooldownTimer = GetCooldownBounded();
     }
 
     public void AttachProjectileModifier(IProjectileModifier modifier, float duration)

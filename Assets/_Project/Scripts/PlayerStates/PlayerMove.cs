@@ -14,7 +14,7 @@ public class PlayerMove : IState
 
     public void FixedTick()
     {
-        pC.rB.velocity = pC.moveAction.ReadValue<Vector2>() * pC.moveSpeed;
+        pC.rB.velocity = pC.moveAction.ReadValue<Vector2>() * pC.moveSpeed * Time.fixedDeltaTime;
     }
 
     public void LateTick()

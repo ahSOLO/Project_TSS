@@ -7,14 +7,14 @@ public class BigShell : IProjectileModifier
 
     public void OnAttach(TurretController turret)
     {
-        turret.SetDamage(turret.GetDamage() * 2f);
-        turret.SetSpeed(turret.GetSpeed() * 0.4f);
+        turret.SetDamage(turret.GetDamage() * 1.7f);
+        turret.SetSpeed(turret.GetSpeed() * 0.8f);
     }
 
     public void OnDetach(TurretController turret)
     {
-        turret.SetDamage(turret.GetDamage() / 2f);
-        turret.SetSpeed(turret.GetSpeed() / 0.4f);
+        turret.SetDamage(turret.GetDamage() / 1.7f);
+        turret.SetSpeed(turret.GetSpeed() / 0.8f);
     }
 
     public void OnProjEnable(Projectile proj)

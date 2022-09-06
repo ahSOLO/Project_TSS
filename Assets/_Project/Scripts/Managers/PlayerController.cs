@@ -53,8 +53,8 @@ public class PlayerController : MonoBehaviour
         
     }
 
-    public Vector2 GetPlayerVelocity()
+    public Vector2 GetPlayerPosition()
     {
-        return rB.velocity;
+        return transform.position;
     }
 }
