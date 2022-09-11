@@ -14,16 +14,14 @@ public class ChaseAI : IEnemyAI
 
     public void Tick(Enemy enemy)
     {
-
     }
 
     public void FixedTick(Enemy enemy)
     {
         if (PlayerController.instance != null)
         {
-            enemy.transform.rotation = Quaternion.Lerp(enemy.transform.rotation, Quaternion.LookRotation(Vector3.forward, (PlayerController.instance.transform.position - enemy.transform.position)), enemy.rotSpeed);
+            enemy.transform.rotation = Quaternion.RotateTowards(enemy.transform.rotation, Quaternion.LookRotation(Vector3.forward, (PlayerController.instance.transform.position - enemy.transform.position)), enemy.rotSpeed * Time.fixedDeltaTime);
         }
-        
         rB.velocity = enemy.transform.up * enemy.moveSpeed * Time.fixedDeltaTime;
     }
 

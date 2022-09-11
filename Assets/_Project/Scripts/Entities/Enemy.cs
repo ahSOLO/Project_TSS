@@ -4,11 +4,6 @@ using UnityEngine;
 
 public class Enemy : Entity
 {
-    public float moveSpeed;
-    public float rotSpeed;
-    public float turretRotSpeed;
-    public float cooldownTimer;
-
     public EnemyAICollection enemyAI;
 
     public GameObject projectilePrefab;
@@ -16,6 +11,13 @@ public class Enemy : Entity
     public Transform projectileSpawnPoint;
     public Transform turret;
 
+    [Header("Movement")]
+    public float moveSpeed;
+    public float rotSpeed;
+    [Header("Turret")]
+    public float turretRotSpeed;
+    public float cooldownTimer;
+    [Header("Projectile")]
     public float projCooldown;
     public float projDamage;
     public float projSpeed;
