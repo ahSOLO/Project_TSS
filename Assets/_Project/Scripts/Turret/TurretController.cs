@@ -7,23 +7,37 @@ public class TurretController : MonoBehaviour
 {
     public static TurretController instance;
     
-    public Transform projectileSpawnPoint;
-    public Transform projectileContainer;
-    public float turnSpeed = 450f;
-    public float cooldownTimer;
-
     private InputAction aimAction;
     private InputAction mousePos;
     private InputAction fireAction;
 
+    [Header("Turret")]
+    public float turnSpeed = 450f;
+    private float cooldownTimer;
+
+    [Header("Projectile")]
     public GameObject projectilePrefab;
+    public Transform projectileSpawnPoint;
+    public Transform projectileContainer;
 
-    public float projCooldown;
-    public float projDamage;
-    public float projSpeed;
-    public float projLifetime;
+    public int projNumber = 1;
+    public float projSpread = 0.5f;
+    public float projRotSpread = 0f;
+    public float projCooldown = 0.5f;
+    public float projDamage = 10f;
+    public float projSpeed = 10f;
+    public float projLifetime = 3f;
 
-    List<ProjectileModifierEntry> modifiers;
+    private float minSpread = 0.5f;
+    private float maxSpread = 2f;
+    private float minRotSpread = 0f;
+    private float maxRotSpread = 120f;
+    private float minCooldown = 0.2f;
+    private float maxDamage = 9999f;
+    private float minSpeed = 4f;
+    private float maxSpeed = 24f;
+
+    private List<ProjectileModifierEntry> modifiers;
 
     private void Awake()
     {
@@ -61,7 +75,7 @@ public class TurretController : MonoBehaviour
 
         if (fireAction.IsPressed() && cooldownTimer <= 0f)
         {
-            FireProjectile();
+            FireVolley();
         }
 
         for (int i = modifiers.Count - 1; i >= 0; i--)
@@ -86,12 +100,32 @@ public class TurretController : MonoBehaviour
         transform.rotation = Quaternion.RotateTowards(transform.rotation, rotationDest, turnSpeed * Time.deltaTime);
     }
 
-    private void FireProjectile()
+    private void FireVolley()
+    {
+        if (projNumber == 1)
+        {
+            FireProjectile(projectileSpawnPoint.position, projectileSpawnPoint.rotation);
+            return;
+        }
+
+        Vector3 spreadLeftBound = projectileSpawnPoint.position - (projectileSpawnPoint.right * GetSpreadBounded() / 2f);
+        Quaternion rotationSpreadLeftBound = Quaternion.Euler(projectileSpawnPoint.rotation.eulerAngles.x, projectileSpawnPoint.rotation.eulerAngles.y, projectileSpawnPoint.rotation.eulerAngles.z + GetRotSpreadBounded() / 2f);
+        
+        for (float i = 0.5f; i < projNumber; i++)
+        {
+            FireProjectile(
+                spawnPosition: spreadLeftBound + projectileSpawnPoint.right * (i * GetSpreadBounded() / projNumber),
+                spawnRotation: Quaternion.Euler(rotationSpreadLeftBound.eulerAngles.x, rotationSpreadLeftBound.eulerAngles.y, rotationSpreadLeftBound.eulerAngles.z - (i * GetRotSpreadBounded() / projNumber))
+                );
+        }
+    }
+
+    private void FireProjectile(Vector3 spawnPosition, Quaternion spawnRotation)
     {
         var proj = Instantiate(projectilePrefab, projectileContainer, true);
-        proj.GetComponent<Projectile>().Init(projDamage, projSpeed, projLifetime, modifiers, Faction.Player);
-        proj.transform.position = projectileSpawnPoint.position;
-        proj.transform.rotation = projectileSpawnPoint.rotation;
+        proj.GetComponent<Projectile>().Init(GetDamageBounded(), GetSpeedBounded(), projLifetime, modifiers, Faction.Player);
+        proj.transform.position = spawnPosition;
+        proj.transform.rotation = spawnRotation;
         proj.gameObject.SetActive(true);
         cooldownTimer = GetCooldownBounded();
     }
@@ -102,16 +136,10 @@ public class TurretController : MonoBehaviour
 
         modifier.OnAttach(this);
     }
-
-    public float GetCooldown() => projCooldown;
-    public float GetCooldownBounded() => Mathf.Max(0.15f, projCooldown);
-    public void SetCooldown(float cd) => projCooldown = cd;
-
-    public float GetSpeed() => projSpeed;
-    public float GetSpeedBounded() => Mathf.Min(25f, Mathf.Max(1f, projSpeed));
-    public void SetSpeed(float speed) => projSpeed = speed;
-
-    public float GetDamage() => projDamage;
-    public float GetDamageBounded() => Mathf.Min(9999f, Mathf.Max(1f, projDamage));
-    public void SetDamage(float damage) => projDamage = damage;
+    
+    private float GetCooldownBounded() => Mathf.Max(minCooldown, projCooldown);
+    private float GetSpeedBounded() => Mathf.Min(maxSpeed, Mathf.Max(minSpeed, projSpeed));
+    private float GetDamageBounded() => Mathf.Min(maxDamage, projDamage);
+    private float GetSpreadBounded() => Mathf.Min(maxSpread, Mathf.Max(minSpread, projSpread));
+    private float GetRotSpreadBounded() => Mathf.Min(maxRotSpread, Mathf.Max(minRotSpread, projRotSpread));
 }

@@ -2,21 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StraightShot : IProjectileModifier
+public class MultiShot : IProjectileModifier
 {
-    float speedMod = 2f;
-    float damageMod = 1.5f;
+    int numberMod = 2;
 
     public void OnAttach(TurretController turret)
     {
-        turret.projSpeed = turret.projSpeed * speedMod;
-        turret.projDamage = turret.projDamage * damageMod;
+        turret.projNumber += numberMod;
     }
 
     public void OnDetach(TurretController turret)
     {
-        turret.projSpeed = turret.projSpeed / speedMod;
-        turret.projDamage = turret.projDamage / damageMod;
+        turret.projNumber -= numberMod;
     }
 
     public void OnProjEnable(Projectile proj)
@@ -28,4 +25,5 @@ public class StraightShot : IProjectileModifier
     {
         
     }
+
 }

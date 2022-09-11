@@ -4,17 +4,19 @@ using UnityEngine;
 
 public class RapidFire : IProjectileModifier
 {
+    float cdMod = 0.5f;
+    float damageMod = 1.15f;
 
     public void OnAttach(TurretController turret)
     {
-        turret.SetCooldown(turret.GetCooldown() * 0.50f);
-        turret.SetDamage(turret.GetDamage() * 1.15f);
+        turret.projCooldown = turret.projCooldown * cdMod;
+        turret.projDamage = turret.projDamage * damageMod;
     }
 
     public void OnDetach(TurretController turret)
     {
-        turret.SetCooldown(turret.GetCooldown() / 0.50f);
-        turret.SetDamage(turret.GetDamage() / 1.15f);
+        turret.projCooldown = turret.projCooldown / cdMod;
+        turret.projDamage = turret.projDamage / damageMod;
     }
 
     public void OnProjEnable(Projectile proj)

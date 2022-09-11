@@ -5,7 +5,7 @@ using UnityEngine;
 public class PowerUp : MonoBehaviour
 {
     private IProjectileModifier projectilePU;
-    public enum ProjectilePU { RapidFire, StraightShot, BigShell };
+    public enum ProjectilePU { RapidFire, StraightShot, BigShell, MultiShot, Shotgun };
     public ProjectilePU projectilePUSelection;
     public float duration;
 
@@ -21,6 +21,12 @@ public class PowerUp : MonoBehaviour
                 break;
             case ProjectilePU.BigShell:
                 projectilePU = new BigShell();
+                break;
+            case ProjectilePU.MultiShot:
+                projectilePU = new MultiShot();
+                break;
+            case ProjectilePU.Shotgun:
+                projectilePU = new Shotgun();
                 break;
             default:
                 break;

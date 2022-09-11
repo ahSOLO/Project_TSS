@@ -5,21 +5,25 @@ using UnityEngine;
 public class BigShell : IProjectileModifier
 {
 
+    float damageMod = 1.7f;
+    float speedMod = 0.8f;
+    float scaleMod = 2f;
+
     public void OnAttach(TurretController turret)
     {
-        turret.SetDamage(turret.GetDamage() * 1.7f);
-        turret.SetSpeed(turret.GetSpeed() * 0.8f);
+        turret.projDamage = turret.projDamage * damageMod;
+        turret.projSpeed = turret.projSpeed * speedMod;
     }
 
     public void OnDetach(TurretController turret)
     {
-        turret.SetDamage(turret.GetDamage() / 1.7f);
-        turret.SetSpeed(turret.GetSpeed() / 0.8f);
+        turret.projDamage = turret.projDamage / damageMod;
+        turret.projSpeed = turret.projSpeed / speedMod;
     }
 
     public void OnProjEnable(Projectile proj)
     {
-        proj.transform.localScale *= 2f;
+        proj.transform.localScale *= scaleMod;
     }
 
     public void OnHit(Projectile proj)
