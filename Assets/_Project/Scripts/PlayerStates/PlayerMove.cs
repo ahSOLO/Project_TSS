@@ -14,7 +14,9 @@ public class PlayerMove : IState
 
     public void FixedTick()
     {
-        pC.rB.velocity = pC.moveAction.ReadValue<Vector2>() * pC.moveSpeed * Time.fixedDeltaTime;
+        Vector2 dir = pC.moveAction.ReadValue<Vector2>();
+        pC.transform.rotation = Quaternion.RotateTowards(pC.transform.rotation, Quaternion.LookRotation(Vector3.forward, dir), pC.rotationSpeed * Time.deltaTime);
+        pC.rB.velocity = pC.transform.up * dir.magnitude * pC.moveSpeed * Time.fixedDeltaTime;
     }
 
     public void LateTick()
