@@ -24,9 +24,9 @@ public class Enemy : Entity
     public float projLifetime;
 
     [Tooltip("The starting angle. Rotations start counter-clockwise with right as starting point, normalized between -180 and 180 degrees.")]
-    public float sweepStartAngle = -40;
+    public float sweepStartAngle = -40f;
     [Tooltip("The ending angle. Rotations start counter-clockwise with right as starting point, normalized between -180 and 180 degrees.")]
-    public float sweepEndAngle = -40f;
+    public float sweepEndAngle = 40f;
 
     protected override void Awake()
     {

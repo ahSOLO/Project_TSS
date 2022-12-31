@@ -13,11 +13,14 @@ public class PlayerIdle : IState
     
     public void FixedTick()
     {
-        pC.rB.velocity *= (1 - pC.friction);
-
-        if (Mathf.Abs(pC.rB.velocity.x) <= 0.01f && Mathf.Abs(pC.rB.velocity.y) <= 0.01f)
+        var targetVeloc = pC.rB.velocity * (1 - (pC.friction * Time.fixedDeltaTime));
+        if (targetVeloc.sqrMagnitude >= Mathf.Pow(pC.idleMinSpeed, 2))
         {
-            pC.rB.velocity = Vector2.zero;
+            pC.rB.velocity = targetVeloc;
+        }
+        else
+        {
+            pC.rB.velocity = targetVeloc.normalized * pC.idleMinSpeed;
         }
     }
 

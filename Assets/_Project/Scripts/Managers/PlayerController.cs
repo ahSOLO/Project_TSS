@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     [RangeAttribute(0, 1)] public float friction = 0.233f;
     public float moveSpeed = 3f;
     public float rotationSpeed = 720f;
+    public float idleMinSpeed = 1f;
     public Rigidbody2D rB;
 
     // Player SM

@@ -189,9 +189,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 236e508245173dd4b963153ce6c98fda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  friction: 0.233
+  friction: 0.6
   moveSpeed: 150
-  rotationSpeed: 405
+  rotationSpeed: 385
+  idleMinSpeed: 1
   rB: {fileID: 5500692028802471308}
   moveAction:
     m_Name: Move

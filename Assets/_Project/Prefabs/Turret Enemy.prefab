@@ -274,7 +274,7 @@ MonoBehaviour:
   rotSpeed: 90
   turretRotSpeed: 80
   cooldownTimer: 0
-  projCooldown: 2
+  projCooldown: 1.5
   projDamage: 10
   projSpeed: 5
   projLifetime: 3
